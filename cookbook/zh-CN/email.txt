@@ -1,28 +1,28 @@
-﻿How to send an email
+如何发送 Email
 ====================
 
-Overview
+概述
 --------
 
-Sending mails from a web application is a very common tasks. Symfony uses its architecture to automate it in a familiar way (MVC separation) and provides a specific class to deal with the particularities of the emails (multiple mime types, enclosed media, attachments).
+从网站应用发送 Email 是很常见的工作。 symfony 以其熟悉的方法（MVC 分离）方法，通过其架构自动实现，并且提供了一个特定的类来处理邮件的各种特性（multiple mine类型， 附带媒体，附件）。
 
-Introduction
+介绍
 ------------
 
-Symfony offers two ways to send emails from your web application: 
+symfony 提供两种方法用于从网站应用发送 Email：
 
-- Via the `sfMail` class, which is a proxy class that offers an interface with [PHPMailer](http://phpmailer.sourceforge.net/). This solution is simple and fast, but doesn't provide MVC separation and is hardly compatible with i18n. Complex emails are also harder to compose with the `sfMail` class alone.
+- 通过 `sfMail` 类，一个提供 [PHPMailer](http://phpmailer.sourceforge.net/) 界面代理 （proxy）类。这种方法简单快捷，但是不能达到 MVC 分离，而且很难实现 i18n 兼容。 复杂的 Email 也很难通过 `sfMail` 类单独处理。
 
-- Via a specific action and template. This solution is very versatile and deals with emails just as regular pages, with the addition of the specificities of this media. It is a little longer to put in place, but much more powerful than the first one.
+- 通过特定的动作（action）和模板（template）。这种方法很强大且凭借其独有的特性以普通页面的形式处理 Email。 构建之时略微复杂，但比起一种方式强大很多。
 
-The implementation of both solution will be illustrated through the same example: the sending of a forgotten password requested by a user.
+下面将以同一个例子（根据用户请求发送遗忘的密码）分别展示两种方法。
 
-Direct use of `sfMail`
-----------------------
+直接使用 `sfMail`
+----------------
 
-The `sfMail` class will look familiar to those who know the `PHPMailer` class. It is simply a proxy class to `PHPMailer`, taking advantage of the symfony syntax. The `PHPMailer` class is included in the symfony package, so no additional installation (nor require) is required.
+对于了解 `PHPMailer` 类使用者， `sfMail` 类看上去很熟悉。 他只不过是利用 symfony 语法优势开发的 `PHPMailer` 类的代理（）， `PHPMailer` 类已经包含在 symfony 包中，所以不需要额外的安装。
 
-To send an email containing a password to a customer, an action has to do like the following:
+向客户发送一封饱含密码的 Email，需要如下的动作：
 
     [php]
     public function executePasswordRequest()
@@ -57,10 +57,10 @@ To send an email containing a password to a customer, an action has to do like t
       $mail->send();
     }
   
-Use of an alternate action
---------------------------
+使用动作
+------------
 
-In many cases, as the email sending process is just a detour in the logic of an action that does something else, it is often delegated to another action. Here is how it goes:
+在很多情形下，从逻辑上讲， email 发送过程与实现其他目的的动作没有什么不同，所以经常被放在动作中，如下所示：
 
     [php]
     public function executePasswordRequest()
@@ -72,9 +72,9 @@ In many cases, as the email sending process is just a detour in the logic of an 
       $this->logMessage($raw_email, 'debug');
     }
 
-The email sending is delegated to a `sendPassword` action of a `mail` module. The `sendEmail()` method of the `sfAction` class is a special kind of `forward()` that executes another action but comes back afterward (it doesn't stop the execution of the current action). In addition, it returns a raw email that can be written into a log file (you will find more information about the way to log information in [Chapter 16](http://www.symfony-project.com/book/trunk/16-Application-Management-Tools#Debugging)).
+email 发送被安排在 `mail` 模块的 `sendPassword` 动作中。  The email sending is delegated to a `sendPassword` action of a `mail` module. The `sfAction` 类的 `sendEmail()` 方法是一种特殊类型的 `forward()` ，用于执行其他的动作并在之后调转回来（它不会终止当前的动作）。 另外，它返回一个可以写入日志（log）（[Chapter 16](http://www.symfony-project.com/book/trunk/16-Application-Management-Tools#Debugging)有记录日志信息的进一步信息）的原邮件。 
 
-The `mail/sendPassword` deals with the `sfMail` object, but it doesn't need to define the mailer (it is taken from a configuration file) nor to initialize it:
+`mail/sendPassword` 处理 `sfMail` 类， 但是不需要定义 mailer （可以从配置文件中获得）也不需要将其初始化：
 
     [php]
     public function executeSendPassword()
@@ -99,7 +99,7 @@ The `mail/sendPassword` deals with the `sfMail` object, but it doesn't need to d
       $this->mail = $mail;    
     }
     
-Notice that the action doesn't need to call the `send()` method for the `sfMail` object; being called by a `sendEmail()`, it knows that it needs to finish by sending its `$this->mail` `sfMail` object. And where is the mail? will you ask. That's the beauty of the MVC separation: the body of the mail itself is to be written in the template `sendPasswordSuccess.php`:
+应注意到动作并没有调用 `sfMail` 对象的 `send()` 方法，而是由 `sendEmail()` 来调用，通过发送 `$this->mail` `sfMail` 对象实现。那么邮件在哪呢？你会问。 这就是 MVC 分离的妙处：邮件正文本身写在模板文件 `sendPasswordSuccess.php` 之中：
 
     [php]
     Dear customer,
@@ -110,14 +110,14 @@ Notice that the action doesn't need to call the `send()` method for the `sfMail`
     Regards,
     The My Company webmaster
 
->**Note**: If the `sendPassword` action ever determines that the email doesn't have to be sent, it can still abort the emailing process by returning `sfView::NONE`, just like a regular action.
+>**Note**：如果 `sendPassword` 动作中决定不发送邮件，仍可以像其他动作一样通过返回 `sfView::NONE` 中止邮件发送过程。
 
-Mailer configuration
+Mailer 配置
 --------------------
 
-If you use the alternate action method, you can (you don't have to) set the mailer and activate it environment by environment through a configuration file.
+如果你使用动作方法，你可以（不是必须的）设置 mailer 并通过配置文件逐个环境地激活之。
 
-Create a `mailer.yml` configuration file in the `modules/mail/config/` directory  with:
+在 `modules/mail/config/` 目录建立一个 `mailer.yml` 配置文件，写入如下内容：
 
     dev:
       deliver:    off
@@ -125,12 +125,12 @@ Create a `mailer.yml` configuration file in the `modules/mail/config/` directory
     all:
       mailer:     sendmail
 
-This stipulates the mailer program to be used to send mails, and deactivates the sending of mails in the development environment.
+这规定了所使用的邮件发送程序， 且规定开发环境中不发送邮件。
 
-Send HTML email
----------------
+发送 HTML 邮件
+-------------
 
-Most of the time, emails are to be sent in HTML format, or even in a multipart format (enclosing both HTML and text format). To handle it directly with the `sfMail` object, use the `setContentType()` method and specify an alternate body:
+大多数情况， Email 是以 HTML 或者 multipart（包括 HTML 和 文本格式） 格式发送的。通过使用 `sfMail` 对象的 `setContentType()` 并指定备用的替换内容（Alternate Body）：
 
     [php]
     $mail->setContentType('text/html');
@@ -153,8 +153,7 @@ Most of the time, emails are to be sent in HTML format, or even in a multipart f
     Regards,
     The My Company webmaster');    
 
-If you use an alternate action, you will just need to use an alternate template ending with `.altbody.php`. Symfony will automatically add it as alternate body:
-
+如果你使用的是动作方法，你只需使用以 `.altbody.php` 结尾的备用替换模板。 symfony 将自动添加备用替换内容：
     [php]
     // in sendPasswordSuccess.php
     <p>Dear customer</p>,
@@ -176,17 +175,17 @@ If you use an alternate action, you will just need to use an alternate template 
     Regards,
     The My Company webmaster
 
->**Note**: If you just use an HTML version without altbody template, you will need to set the content type to `text/html` in the `sendPassword` action.
+>**Note**: 如果你使用 HTML 而没有设置替换模板，你需要在 `sendPassword` 动作中将内容类型设置为 `text/html`。
 
-Embed images
-------------
+嵌入图片
+-------
 
-HTML emails can contain images directly embedded in the body. To add an embedded image, use the `addEmbeddedImage()` method of the `sfMail` object:
+HTML Email 可以直接在正文中嵌入图片。使用 `sfMail` 对象的 `addEmbeddedImage()` 方法添加嵌入图片：
 
     [php]
     $mail->addEmbeddedImage(sfConfig::get('sf_web_dir').'/images/my_company_logo.gif', 'CID1', 'My Company Logo', 'base64', 'image/gif');
 
-The first argument is the path to the image, the second is a reference of the image that you can use in the template to embed it:
+第一个参数是图片的路径，第二个是模板中可以用于引用图片的参考：
 
     [php]
     // in sendPasswordSuccess.php
@@ -201,10 +200,10 @@ The first argument is the path to the image, the second is a reference of the im
       <img src="cid:CID1" />
     </p>
     
->**Tip**: You can also embed imaged directly from the template, without any code in the action. Refer to the `embedded_image()` helper description in the [code snippets section](http://www.symfony-project.com/snippets/snippet/27).
+>**Tip**: 你还可以不使用动作代码，通过 `embedded_image()` 助手直接在模板中嵌入图片。 使用请参阅 [code snippets section](http://www.symfony-project.com/snippets/snippet/27) 。
 
-Attachments
------------
+附件
+---
 
 Attaching a document to a mail is as simple as you would expect it to be:
 

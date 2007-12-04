@@ -1,81 +1,82 @@
-﻿symfony advent calendar day one: starting up a project
+symfony 圣诞日历 第一天：项目启动
 ======================================================
 
-The challenge
+挑战
 -------------
+symfony 圣诞日历是一组24课的教程， 在12月1日和圣诞节之间按日发布。 包括周末在内的每一天，一篇心得教程都会发布。每篇教程都不超过一小时，而且由浅入深地展现 web 2.0 应用开发。 圣诞节时，程序代码将被开放，最终程序将被放到网上。 此程序可用、有意思、有用而且有趣。
+ 
+二十四个少于一小时相当于一天，这正是学习symfony 所需的时间。 每一天，都有新特性添加到 symfony web 开发， 我们借此开发过程向你展示 symfony 功能的同时也提供了绝好的 symfony web 开发练习。 每一天，你都将体会到试用 symfony 进行 web 应用开发的快捷，而且引发你了解更多的内容。
 
-The symfony advent calendar is a set of 24 tutorials, published day-by-day between December 1st and Christmas. That's right, every day including week-ends, a new tutorial will be published. Each tutorial is meant to last less than one hour, and will be the occasion to see the ongoing development of a web 2.0 application, from A to Z. For Christmas time, the resulting application will be put online, and the source code made open source. This application will be usable, interesting, useful, and fun. 
+考虑到挑战性的不足，当然也源于我们的惰性，没有为第21天安排内容 - winter time。 社区之中最需求的功能将在那一天被添加到应用，没有准备，我们也有办法填补上这个空白。 那一天将成为寻找 symfony 大师日。
 
-Twenty-four times less than one hour equals less than a day, and that's exactly how long we think that a developer needs to learn symfony. Every day, new features will be added to the application, and we'll take advantage of this development to show you how to take advantage of symfony's functionality as well as good practices in symfony web development. Every day, you will realize how fast and efficient it is to develop a web app with symfony, and you will want to know more. 
-
-Considering that it wouldn't be enough of a challenge with just that, and also because we are lazy folks, we have no plans for the 21st day - winter time. The feature that the community will require the most will be added to the application that day, without preparation, and we'll make it work. It will be the get-a-symfony-guru-for-a-day day. 
-
-The project
+项目
 -----------
 
-The application to be designed could have been a trivial "show-and-tell" application, like a to-do list, a phone book, or a bookstore. But we want to use symfony on an original project, something useful, with numerous features and an important size. The goal is really to prove that symfony can be used in complex situations, to develop professional applications with style and little effort. 
+将要开发的程序是一个深入细节的关于 “展示与讲述”的应用， 就像是一个任务列表，一本电话簿，或是一个书店。 但我们将使用 symfony 从头开发一个项目，融入实用的内容， 大量特色，达到相当的规模。 我们的目标是实实在在地证明 symfony 可以用于复杂的情形，轻松地开发出颇具特色的专业应用。
 
-We also hope that lots of people will actually use the application, in order to show that a symfony website can support an important load. That's why the application needs to bring an actual service, and to answer an existing need - or to create a new one. The launch of the website will be a live stress test; this also means that we will need you, humble readers, to digg/bookmark/blog the site and talk about it in real life to check how many visits it can support.
+我们也希望很多人能够用到这个程序， 从而证明 symfony 可以可观可观的负荷。 这也正是为什么需要提供真实的服务，回答现实的需求，或者成为一个创新。 该网站的架设将成为一个现场测试， 有鉴于此，我们需要你作为普通的使用者挖掘、收藏、博客和宣传这个站点，从而获知这个程序所能支撑的访问数量。
 
-The content of the project will be kept secret for another day. We still have much to do today without describing a full-featured web 2.0 application. This should give you some time to argue and launch additional hypothesis. However, we need a name, so let's call it: **askeet**.
+整个项目的内容暂时保密。 我们今天要做的事情还很多，就不在这里描述 web2.0 应用的全景了。 这也给你了更多的时间来争辩和添加额外的假想。 当然我们还是需要为它命名，让我们称之为： **askeet** 吧.
 
-What for today
+今天做什么
 --------------
 
-The objective of the day is to display a page of the application in a web browser, and to setup a professional development environment. This includes installation of symfony, creation of an application, web server configuration, and setup of a source version control system.
+今天的目标是在浏览器中显示应用的一个页面，与此同时建立起一个专业的开发环境。 这包括安装 symfony ，建立应用，网站服务器配置以及建立一个源版本的控制系统。
 
-It should be easy for those who already followed the previous tutorials, and not very hard for others. And everyone should learn something new.
+对于学习了其他教程的读者着很简单，对于其他人也并不难。 而且每位读者都会学到些东西。
 
-We'll assume that you use a Unix-like system with Apache, MySQL and PHP 5 installed. If you run a Windows system, don't panic: it will also work fine, you'll just have to type a few commands in the `cmd` prompt.
+我们假设你在使用类 Unix 系统，并且已经安装了 Apache, MySQL 和 PHP5。 如果你使用的是 windows 系统，不用担心：同样会运转正常，你只需要在命令行窗口中键入为数不多的几个命令。
 
-Symfony installation
+安装 Symfony
 --------------------
 
-The simplest way to install symfony is to use the [PEAR][1] package. However, to be able to use channels - and access the symfony channel - you need to upgrade to PEAR 1.4.0 or greater (unless you run PHP 5.1.0, which includes PEAR 1.4.5):
+symfony 得最简单安装方式是通过 [PEAR][1] 。 但是，为了使用 channel （频道）来访问 symfony 你需要将 PEAR 省级到 PEAR 1.4.0 或更高版本（除非你运行的是 PHP 5.1.0，  PEAR 1.4.5 包括在其中）:
 
     $ pear upgrade PEAR
 
->**Note**: if you experience any problem while using PEAR, refer to the [Running symfony](http://www.symfony-project.com/book/1_0/03-Running-Symfony) book chapter.
+>**注意**：如果你在使用 PEAR 的过程中遇到什么问题，可以参考 symfony 权威指南中的 [Running symfony](http://www.symfony-project.com/book/1_0/03-Running-Symfony) 章节。
 
-Now you can add the 'symfony' channel:
+现在你可以添加 'symfony' channel:
 
     $ pear channel-discover pear.symfony-project.com
 
-You are ready to install the latest stable version of symfony together with all its dependencies:
+你现在可以安装 symfony 的最新版本及其所有相关组件：
 
     $ pear install symfony/symfony
 
-Check that symfony is installed by using the command line to check the version:
+用命令行查看 symfony 版本来检查 symfony 安装：
 
     $ symfony -V
 
-If you are curious about what this new command line tool can do for you, type `symfony -T` to list the available options. You might also want to read the [Running symfony](http://www.symfony-project.com/book/1_0/03-Running-Symfony) book chapter to see how to install symfony from a tgz archive or the svn repository. A community contribution also details a non-PEAR installation in [the symfony wiki](http://www.symfony-project.com/trac/wiki/InstallingSymfonyWithoutPear).
+如果你想知道这个新结识的命令行工具能为你做什么，键入 `symfony -T` 可以获得相关的列表。 你也许还想知道如何从 tgz 压缩文件或者 svn 库安装 symfony，请阅读symfony 权威指南 [Running symfony](http://www.symfony-project.com/book/1_0/03-Running-Symfony) 章节。 [the symfony wiki](http://www.symfony-project.com/trac/wiki/InstallingSymfonyWithoutPear)中的一个社区文档中也介绍了非 PEAR 安装方法。
 
-Project Setup
+建立项目
 -------------
 
-In symfony, **applications** sharing the same data model are regrouped into **projects**. For the askeet project, we can already disclose the fact that there will be a frontend and a backend: that makes two applications. The project being the shell of the applications, it has to be created first. To do that, all you need is a directory and a `symfony init-project` command line:
+在 symfony 中，不同的 **应用** (applications)共享用一个数据模型并被组织到 **项目**(project) 中。 对于 askeet 项目， 我们已经决定建立前台（frontend）和后台（backend）：两个应用。 项目是应用的家，必须首先被建立。 做到这一点，你需要新建一个目录和一个 `symfony init-project` 命令行：
 
     $ mkdir /home/sfprojects/askeet
     $ cd /home/sfprojects/askeet
     $ symfony init-project askeet
 
-Now it is time to create the frontend application with the `symfony init-app` command: 
+现在，是用 `symfony init-app` 建立前台应用的时候了：
 
     $ symfony init-app frontend
 
-Wow, that was fast.
+喔，真快。
 
->**Note**: Windows users are advised to run symfony and to setup their new project in a path which contains no spaces - this includes the `Documents and Settings` directory.
+>**注意**： 建议 Windows 用户在不包含空格的路径下运行 symfony 和建立新项目 -  `Documents and Settings` 目录也不可以。
 
-Web service setup
+建立网站服务
 -----------------
 
-### Web server configuration
+### 网站服务配置
 
-Now it is time to change your Apache configuration to make the new application accessible. In a professional context, it is better to setup a new application as a virtual host, and that's what will be described here. However, if you prefer to add it as an alias, find how in the [web server configuration](http://www.symfony-project.com/cookbook/1_0/web_server) cookbook chapter.
+更改 Apache 设置另新应用可以被访问。 从专业角度讲，最好将新应用建立为一个虚拟主机（virtual host）， 这也是这里介绍的方式。 但如果你愿意使用别名
 
-Open the `httpd.conf` file of your `Apache/conf/` directory and add at the end:
+（alias）方式，symfony 权威指南 [web server configuration](http://www.symfony-project.com/cookbook/1_0/web_server) cookbook 中有所介绍。
+
+打开 `Apache/conf/` 目录下的 `httpd.conf` 文件，添加如下内容：
 
     <VirtualHost *:80>
       ServerName askeet
@@ -88,71 +89,71 @@ Open the `httpd.conf` file of your `Apache/conf/` directory and add at the end:
       </Directory>
     </VirtualHost>
 
->**Note**: the `/sf` alias has to point to the symfony folder in your PEAR data directory. To determine it, just type `pear config-show`. Symfony applications need to have access to this folder to get some image and javascript files, to properly run the web debug toolbar and the AJAX helpers.
+>**注意**： `/sf` 别名必须指向 PEAR data 目录中的 symfony 文件夹。 确定路径可以使用 `pear config-show` 命令。Symfony 应用需要访问该文件夹中获取一些图片和 javascript 文件files，以便运行网站差错（debug）工具栏和 AJAX 助手（helpers）。
 
-In Windows, you need to replace the `Alias` line by something like:
+在 Windows 上，你需要将 `Alias` 行更改为类似如下的代码：
 
       Alias /sf "C:\php\pear\data\symfony\web\sf"
        
-### Declare the domain name
+### 声明域名
 
-The domain name `askeet` has to be declared locally. 
+域名 `askeet` 必须在本地声明。
 
-If you run a Linux system, it has to be done in the `/etc/hosts` file. If you run Windows XP, this file is located in the `C:\WINDOWS\system32\drivers\etc\` directory. 
+如果你运行的是 Linux 系统，要在 `/etc/hosts` 文件中配置。 如果你运行的是 Windows XP，该文件位于 `C:\WINDOWS\system32\drivers\etc\` 目录。
 
-Add in the following line:
+添加这样一行：
 
     127.0.0.1         askeet
 
->**Note**: you need to have administrator rights to do this.
+>**注意**：进行此操作，你需要管理员权限。
 
-If you don't want to setup a new host, you should add a `Listen` statement to serve your website on another port. This will allow you to use the `localhost` domain.
+如果你不希望建立新的主机，你应该添加一条在其他端口上提供网站服务的 `Listen`（监听） 语句。 这将允许你使用 `localhost` 域名。
 
-### Test the new configuration
+### 测试新配置
 
-Restart Apache, and check that you now have access to the new application:
+重新启动 Apache，你可以访问新应用：
 
     http://askeet/
 
-![Congratulations](/images/askeet/congratulations.gif)
+![配置](/images/askeet/congratulations.gif)
 
->**Note**: symfony can use the `mod_rewrite` module to remove the /index.php/ part of the URLs.
->If you don't want to use it or if your web server does not provide an equivalent facility, you can remove the `.htaccess` file located in the `web/` directory.
->If your version of Apache is not compiled with `mod_rewrite`, check that you have the mod_rewrite DSO installed and the following lines in your `httpd.conf`:
+>**注意**：symfony 可以使用 `mod_rewrite` 模块从 URL 中剔除 /index.php/ 部分。
+>如果你不希望这样，或者你的服务器部提供类似的功能，你可以删除 `web/`目录下的 `.htaccess` 文件。
+>如果你所使用的 Apache 版本没有编译 `mod_rewrite`， 并确认你安装了 mod_rewrite DSO ，在 `httpd.conf` 中添加如下两行：
 >
 >     AddModule mod_rewrite.c
 >     LoadModule rewrite_module modules/mod_rewrite.so
 >
->You will learn more about the smart URLs in the [Links and the Routing System chapter](http://www.symfony-project.com/book/1_0/09-Links-and-the-Routing-System).
+>你可以在You will learn more about the smart URLs in the [链接和路由系统一章](http://www.symfony-project.com/book/1_0/09-Links-and-the-Routing-System)中学到更多关于智能 URL 内容。
 
-You should also try to access the application in the development environment. Type in the following URL:
+你还应该测试对开发环境的访问。键入如下 URL：
 
     http://askeet/frontend_dev.php/
     
-The web debug toolbar should show on the top right corner, including small icons proving that your `Alias sf/` configuration is correct.
+如果 `Alias sf/` 设置正确，debug 工具栏及小图标应出现在页面右上角。
 
 ![web debug toolbar](/images/askeet/web_debug1.gif)
 
-Once again, the setup is a little different if you want to run a IIS server in a Windows environment. Find how to configure it in the [related tutorial](http://www.symfony-project.com/cookbook/1_0/web_server_iis).
+如果是在 Windows 上的 IIS 服务器上安装会有些许的不同。在 [相关章节中](http://www.symfony-project.com/cookbook/1_0/web_server_iis) 有配置方法。
 
-Subversion
+版本控制
 ----------
 
-One of the good principles of lazy folks is not to worry about breaking existing code. As we want to work fast, we want to revert to a previous version if a modification is inefficient, we want to allow more than one person to work on the project, and we also want you to have access to all the daily versions of the application, we are going to adopt source version control. We will use [Subversion][3] for this purpose. Assuming you have already installed a subversion server or have access to a subversion server.
+不担心代码被破坏，是爱偷懒的人很好的一个信条。 我们需要高速地工作， 如果发现做出的更改是没有效率的，会需要逆转回之前的版本，我们还需要不止一个人投身于同一项目的开发，我们还需要能够访问应用程序每天的版本，我们需要的是版本控制。 我们将使用 [Subversion][3] 来实现。 这里假设你已经安装了一个 subversion 服务器，或者可以使用某一个 subversion 服务器。
 
-Fist, create a new repository for the `askeet` project:
+首先，为 `askeet` 项目建立一个新的仓库：
 
     $ svnadmin create $SVNREP_DIR/askeet
     $ svn mkdir -m "layout creation" file:///$SVNREP_DIR/askeet/trunk file:///$SVNREP_DIR/askeet/tags file:///$SVNREP_DIR/askeet/branches
 
-Next, you have to do the first import, omitting the `cache/` and `log/` temporary files:
+然后，必须进行首次的导入，要忽略临时目录 `cache/` 和 `log/` ：
 
     $ cd /home/sfprojects/askeet
     $ rm -rf cache/*
     $ rm -rf log/*
     $ svn import -m "initial import" . file:///$SVNREP_DIR/askeet/trunk
 
-Now get rid of the original application directory and use a checkout of the SVN version:
+最后，清除原应用程序目录，签出（checkout）SVN 版本：
 
     $ cd /home/sfprojects
     $ mv askeet askeet.origin
@@ -161,18 +162,18 @@ Now get rid of the original application directory and use a checkout of the SVN 
 
     $ rm -rf askeet.origin
 
-There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to SVN for this project.
+安装还差一步。 如果在你提交工作目录到仓库时提交了一些不必要的文件，例如你的项目中 `cache` 和 `log` 目录下的文件。那么你需要为该项目向 SVN 指定忽略列表。
 
     $ cd /home/sfprojects/askeet
     $ svn propedit svn:ignore cache
 
-The default text editor configured for SVN should launch. Add the sub directories of `cache/` that SVN should ignore when committing:
+SVN 的默认编辑器将被调用。 添加 `cache/` 的子目录，以便SVN在提交时忽略之：
 
     *
 
-Save and quit. You're done. 
+保存并退出，便完成了修改忽略列表。
 
-Repeat the procedure for the `log/` directory:
+为 `log/` 重复同样的步骤：
 
     $ svn propedit svn:ignore log
 
@@ -180,37 +181,37 @@ And enter only:
 
     *
 
-Now, make sure to set the write permissions on the cache and logs directories back to the appropriate levels so that your web server can write to them again. At the command line:
+确认 cache 和 logs 目录被设置为可写，这样你的网站服务器就又可以向其中写入内容了，命令行是：
 
     $ chmod 777 cache
     $ chmod 777 log
 
->**Note**: Windows users can use the great [TortoiseSVN][4] client to manage their subversion repository.
+>**注意**：Windows 用户可以使用 [TortoiseSVN][4] 客户端来管理 subversion 仓库。
 
-If you want to know more about source version control, check the [project creation chapter](http://www.symfony-project.com/book/1_0/03-Running-Symfony) in the symfony book.
+希望了解更多的版本控制内容，请查阅 symfony 权威指南 [新建项目一章](http://www.symfony-project.com/book/1_0/03-Running-Symfony)。
 
->**Note**: The askeet SVN repository is public. You can access it at:
+>**注意**：askeet SVN 仓库是公开的。你可以访问它：
 >
 >       http://svn.askeet.com/
 >
->Go ahead, check it out.
+>来吧，签出！
 >
->Today's code has been committed, you can checkout the `release_day_1` tag:
+>今天的代码已经提交了，你可以签出 `release_day_1` ：
 >
 >       $ svn co http://svn.askeet.com/tags/release_day_1/ askeet/
 
-See you Tomorrow
+明天见
 ----------------
 
-Well, it's already one hour! We talked a lot, and did nothing new for the symfony early adopters. But just have a look at what will be revealed for our second day of the symfony advent calendar:
+好啦，已经一个小时了！咱们谈得不少了，对于新结识 symfony 的人没有什么新鲜的。 但还是看一看 symfony 圣诞日历第二天将揭示的内容：
 
-* what the application will do
-* building the data model and generating the object-relational mapping
-* scaffolding a module
+* 程序将做什么
+* 建立数据模型并生成对象关系 （object-relational mapping）
+* 建立一个模型脚手架
 
-In between, if you want to keep in touch with the latest askeet news, you can [subscribe to the askeet mailing-list](mailto:askeet-subscribe@symfony-project.com) or go to the [dedicated forum](http://www.symfony-project.com/forum/index.php/f/8/).
+闲暇之余，如果你想了解 askeet 新动态，可以 [订阅 askeet 邮件列表](mailto:askeet-subscribe@symfony-project.com) 或者登陆 [专题论坛](http://www.symfony-project.com/forum/index.php/f/8/)。
 
-Make sure you come back tomorrow!
+别忘了明天回来！
 
 [1]: http://pear.php.net                  "Pear"
 [3]: http://subversion.tigris.org/        "Subversion"

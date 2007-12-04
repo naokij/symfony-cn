@@ -1,26 +1,26 @@
-﻿Easy Ajax in symfony
-====================
+symfony 中轻松 Ajax
+==================
 
-Overview
---------
+概述
+---
 
-Symfony has Ajax helpers that make programming an elaborate interface a piece of cake. This tutorial will show you step-by-step how to create an Ajax-powered symfony application in minutes.
+symfony 的 Ajax 助手令程序界面美化成为小菜一碟。 本教程将向你一步步展示如何在片刻间创建一个 Ajax 支持的 symfony 应用。
 
-Introduction
-------------
+介绍
+---
 
-Real lazy folks that can't stand reading long documentation are advised to watch the [online screencast](http://downloads.symfony-project.com/demo/cart/cart.mov) that demonstrates exactly what is written below.
+如果懒得不能忍受阅读苦楚的家伙们，建议你们观看完全展示如下内容的 [在线视频](http://downloads.symfony-project.com/demo/cart/cart.mov)。
 
-Adding items to a shopping cart in common e-commerce applications isn't very close to the actual "add to cart" metaphor, since it requires clicking an "add to cart" button, watch a new page (the shopping cart), and then go back to the shop or checkout with buttons.
+电子商务应用程序中向购物车添加物品并不完全符合“添加到购物车”的提法，因为这个过程需要点击 “添加到购物车” 按钮，浏览一个新的页面（购物车），然后返回商店或者结账。
 
-Ajax allows to get closer to the cart metaphor, by enabling drag-and-drop interactions and giving immediate visual feedback, without leaving the shop.
+Ajax 启用拖放（drag-and-drop）交互、给与即时的视觉反馈而不需要离开商店，令程序通过更接近购物车的提法。
 
-The target application of this tutorial will be a symfony ported version of the shopping cart demo published by [script.aculo.us](http://script.aculo.us/demos/shop) in [Rails](http://www.rubyonrails.com). It uses the [prototype](http://prototype.conio.net/) javascript framework (bundled with symfony) and some [script.aculo.us](http://script.aculo.us/) javascript that is the core of the javascript helpers.
+该教程的目标程序是开发 symfony 版本的[Rails](http://www.rubyonrails.com)上由[script.aculo.us](http://script.aculo.us/demos/shop)发布的购物车演示。[prototype](http://prototype.conio.net/) javascript 架构（framework）（已捆绑在 symfony 内）和一些 [script.aculo.us](http://script.aculo.us/) javascript 是 javascript 助手的核心。
 
-Application setup
------------------
+建立应用
+-------
 
-First, create a `sfdemo` project, an `app` application and a `cart` module:
+首先建立一个 `sfdemo` 项目，一个 `app` 应用和一个 `cart` 模块：
 
     $ cd /home/steve
     $ mkdir sfdemo
@@ -29,33 +29,33 @@ First, create a `sfdemo` project, an `app` application and a `cart` module:
     $ symfony init-app app
     $ symfony init-module app cart
 
-Setup your web server to be able to access this new application (whether using a virtual host or an alias, as described in the [web server setup](http://www.symfony-project.com/content/book/page/web_server.html) chapter of the documentation). For this example, let's assume that this module is accessible via a localhost:
+配置网站服务另这个新应用得以被访问（如[网站服务器安装](http://www.symfony-project.com/content/book/page/web_server.html)所述，使用虚拟主机或者别名）这里假设模块可以通过 localhost 来访问：
 
     http://localhost/cart/
     
-Congratulations, it says.
+在向你道恭喜（Congratulations）。
 
-Your app must have access to the symfony javascript libraries. If your app doesn't work, check you can access these libraries within your browser (test `http://localhost/sf/js/prototype.js` for example). If not, you have 3 different ways to fix this problem:
+你的 app 应用必须可以访问 symfony javascript 类库。 如果你的 app 不能工作，从浏览器检查是否可以访问类库（比如测试 `http://localhost/sf/js/prototype.js`）。如果不能访问，你可以用 3 种不同的方法解决这个问题：
 
-* configure Apache with the following `Alias`:
+* 以 `别名（Alias）` 配置 Apache:
 
         Alias /sf /$data_dir/symfony/web/sf
 
-* create a `sf` symbolic link in your `web` directory:
+* 在 `web` 目录建立 `sf` 链接（symbolic link）：
 
         $ cd /home/steve/sfdemo/web
         $ ln -sf /$data_dir/symfony/web/sf sf
 
-* copy the javascript files in `web/js` directory:
+* 将 javascript 文件拷贝到 `web/js` 目录：
 
         $ cd /home/steve/sfdemo/web
         $ mkdir -p sf/js
         $ cp /$data_dir/symfony/web/sf/js/*.js sf/js/
 
-The main page
--------------
+主页面
+-----
 
-First, you need to create a list of items to be purchased. To keep the project simple, the element list is accessed via a simple `getProducts()` method of the `cart` actions class. The shopping cart is a simple parameter of the `sfUser` object, set with the Attribute [parameter holder](http://www.symfony-project.com/content/book/page/parameter_holder.html). Modify the `sfdemo/app/modules/cart/actions/actions.class.php` to:
+首先，你需要建立一个代购物品列表。 为了简化这个之，该列表可以通过 `cart` 动作类的 `getProducts()` 方法访问。 购物车是 `sfUser` 对象的一个具有属性 [参数容器（parameter holder）](http://www.symfony-project.com/content/book/page/parameter_holder.html) 的参数。 将 `sfdemo/app/modules/cart/actions/actions.class.php` 改为：
 
     [php]
     class cartActions extends sfActions
@@ -72,7 +72,7 @@ First, you need to create a list of items to be purchased. To keep the project s
       }
     }
 
-The main page of the `cart` module will contain a list of items, and a zone to drag items to. This zone is the shopping cart. So open the template `sfdemo/app/modules/cart/templates/indexSuccess.php` and write in:
+`cart` 模块的主业面将包含一个物品列表，和一个接受拖放的区域。 这个区域便是购物车。 打开 `sfdemo/app/modules/cart/templates/indexSuccess.php` 模板并写入：
 
     [php]
     <h1>symfony Apple store demo</h1>
@@ -97,19 +97,19 @@ The main page of the `cart` module will contain a list of items, and a zone to d
     
     </div>
     
-You can see that products are shown as images. Use the images available in [this archive](http://www.symfony-project.com/downloads/demo/cart/products.tgz), and put them in the `sfdemo/web/images/` directory. In addition, part of the styling was done for you, so it is recommended that you upload [this stylesheet](http://www.symfony-project.com/downloads/demo/cart/cart.css) to the `sfdemo/web/css/` directory and add a `view.yml` in the `sfdemo/app/modules/cart/config/` directory with the following content:
+你可以看到产品以图片形式显示。 使用 [这个压缩文件](http://www.symfony-project.com/downloads/demo/cart/products.tgz)中的图片，将它们放在 `sfdemo/web/images/` 目录中， 另外，部分样式已经帮你设置好， 所以建议你将 [这个样式表](http://www.symfony-project.com/downloads/demo/cart/cart.css) 放在 `sfdemo/web/css/` 目录中并在 `sfdemo/app/modules/cart/config/` 目录中添加 `view.yml` 文件，写入如下内容：
 
     all:
       stylesheets:  [cart]
 
-Now watch the chop and cart backdrop by requesting again:
+现在访问下面的地址查看购物车准备设置：
 
     http://localhost/cart/
     
-Focus on the cart
------------------
+聚焦购物车
+---------
 
-The cart content will change as you drag items to it. This means that the content of the cart in the template must be in an independent file. Use the `include_partial()` helper for that. The items in the shopping cart will be stored in divs with `float:left` style, so a clearing div is necessary after the container. So change the end of the `indexSuccess.php` template to:
+购物车中的内容将随你的物品拖放动作而改变。 这意味着模板中 cart 内容必须在独立文件中。使用 `include_partial()` 助手来实现之。 购物车中的物品将被储存在样式为 `float:left` 的一个个div中，因此在该容器之后需要一个空白的 div。这就需要我们对 `indexSuccess.php` 模板作如下修改：
 
     [php]
       <h2>Cart:</h2>
@@ -123,7 +123,7 @@ The cart content will change as you drag items to it. This means that the conten
       
     </div>
 
-The `include_partial()` helper will include a `_cart.php` file, and look for this file in the `sfdemo/app/modules/cart/templates/` directory. Create it with the following content:
+`include_partial()` 助手将在 `sfdemo/app/modules/cart/templates/` 目录中查找并引用 `_cart.php` 文件。 以如下内容创建这个文件：
 
     [php]
     <?php foreach($sf_user->getAttribute('cart') as $product_id => $quantity): ?>
@@ -143,23 +143,23 @@ The `include_partial()` helper will include a `_cart.php` file, and look for thi
       nothing yet in your shopping cart.
     <?php endif ?> 
 
-If the cart contains items, they appear as images, as many times as they are added; the quantity is be displayed after each series.
+如果购物车中有物品，则将以图片形式出现，有多少个出现多少次，其数量显示在每种产品之后。
 
-Now watch again the shopping cart at:
+现在重新查看购物车：
 
     http://localhost/cart/
     
-Well, there is not much change, it is still very empty... It's time to make things AJAX.
+好了，没有太多的变化，仍旧空空荡荡...... 是添加 Ajax 的时候了。
 
-Add javascript behaviors
--------------------------
+添加 javascript 行为
+-------------------
 
-Edit the `indexSuccess.php` template to require the javascript helper:
+编辑 `indexSuccess.php` 模板，引入 javascript 助手：
 
     [php]
     <?php use_helper('Javascript') ?>
     
-Make the images draggable by adding the following call to the `draggable_element` javascript helper:
+添加对 `draggable_element` javascript 助手的调用，另图片可以被拖拽：
 
     [php]
     <?php foreach($products as $id => $title): ?>
@@ -170,9 +170,9 @@ Make the images draggable by adding the following call to the `draggable_element
       <?php echo draggable_element('product_'.$id, array('revert' => true)) ?>
     <?php endforeach ?>
 
-This adds a 'draggable' behavior to each of the images of the list of products. The `revert` option will make images go back to their origin position when released (unless received by a receiving element).
+这为产品列表中的每个图片添加了 '可拖拽（draggable）' 行为。其中 `revert（返回）` 选项使图片在被拖拽释放时回到原来的位置（除非被其它元素接收）。
 
-Now, define the cart as a receiving element. You just need to define which part of the template will have to be updated when the event occurs, which action will be called for its content, and which type of draggable elements can be dragged into it. Use the `drop_receiving_elements` javascript helper for that:
+现在，将 cart 定义为接收元素。 你只需要确定模板中那个部分在事件发生执行需要更新，需要调用那个动作来提供更新内容，以及那个类型的可拖拽元素可以被接收。使用`drop_receiving_elements` javascript 助手实现之：
 
     [php]
     <?php echo drop_receiving_element('cart', array(
@@ -181,12 +181,12 @@ Now, define the cart as a receiving element. You just need to define which part 
       'accept'     => 'products',
     )) ?>
 
-Now try again, and move the products to the cart: it works. When a draggable item is dragged to the receiving element, an XMLHTTPRequest is sent to the `add` action, and the result is displayed in the `items` div. The thing is, the `add` action of the `cart` module is not defined yet...
+现在再试一下，将物品移动到购物车：可以了。 当一个可拖拽物品被拖动至接收元素，一个 XMLHTTPRequest 被发送至 `add` 动作，其结果被显示在 `items` div 中。问题是 `cart` 模块的 `add`动作还没有被定义。
 
-Define the updating action
---------------------------
+定义更新动作
+----------
 
-Edit the `sfdemo/app/modules/cart/actions/actions.class.php` to add an `add` action:
+在 `sfdemo/app/modules/cart/actions/actions.class.php` 中添加 `add` 动作：
 
     [php]
     public function executeAdd()
@@ -207,14 +207,14 @@ Edit the `sfdemo/app/modules/cart/actions/actions.class.php` to add an `add` act
       $this->products = $this->getProducts();      
     }
 
-This action looks for the parameter sent by the javascript (the id of the dragged item) and adds it to the cart.
+该动作接收 javascript 传递来的参数（被拖放物品的 id）并将其添加至购物车。
 
-The result of the `add` action will be the `addSuccess.php` template. It is a simple inclusion of the `_cart.php` partial, but this time it is necessary to pass the products as a parameter :
+`add` 的结果将显示在仅仅是引用 `_cart.php` 的 `addSuccess.php` 模板，但此次需要传递 products 参数：
 
     [php]
     <?php include_partial('cart', array('products' => $products)) ?>
 
-This template must not use the global layout, so edit the `view.yml` in the `sfdemo/app/modules/cart/config/` directory, and write in:
+该模板不能使用全局布局（global layout），因此编辑 `sfdemo/app/modules/cart/config/` 目录中的 `view.yml` 文件，写入：
 
     addSuccess:
       has_layout:   off
@@ -223,14 +223,14 @@ This template must not use the global layout, so edit the `view.yml` in the `sfd
       has_layout:   on
       stylesheets:  [cart]
       
-Try it on: you can now add items to the cart by dragging them.
+试一下：你现在可以将物品添加到购物车了。
 
-Focus on usability
-------------------
+聚焦可用性
+---------
 
-You could stop now, but this shopping cart has a big default: while the cart is updated, the interface doesn't change and the user might be disoriented. This is a general issue of asynchronous requests: an indicator zone has to be added to show that the request is being processed. In addition, nothing tells the user when the dragged item is considered accepted by the cart, so the `hover` style of the `cart` div also has to be defined.
+你现在可以止步了，但是这个购物车还有个大问题：在购物车被更新过程中，界面上没有变化，用户可能会感到茫然。 这是请求不同步的一个普遍问题：需要添加一个指示（indicator）区域，用以标示请求正在处理。 另外，也没有告知用户什么时候物品被购物车接收到，因此还需要设置 `cart` div 的 `hover` 样式。
 
-To do that, edit the `indexSuccess.php` template and write in:
+做到这一点需要编辑 `indexSuccess.php` 模板并写入：
 
     [php]
     <div style="height:20px">
@@ -239,9 +239,9 @@ To do that, edit the `indexSuccess.php` template and write in:
       </p>
     </div>
 
-Save the 'indicator.gif' [image file](http://www.symfony-project.com/downloads/demo/cart/indicator.gif) to your `sfdemo/web/images/` directory.
+将 'indicator.gif' [图片文件](http://www.symfony-project.com/downloads/demo/cart/indicator.gif) 存放在 `sfdemo/web/images/` 目录。
 
-Now, modify the `drop_receiving_element()` javascript helper call in the same template to show this new indicator while requests are processed and declare the hover style:
+现在修改 `drop_receiving_element()` javascript 助手的调用代码，在请求过程中显示指示器并声明 hover 样式：
 
     [php]
     <?php echo drop_receiving_element('cart', array(
@@ -254,9 +254,9 @@ Now, modify the `drop_receiving_element()` javascript helper call in the same te
       'complete'   => "Element.hide('indicator')"
     )) ?>
 
-Conclusion
-----------
+结语
+---
 
-The complete source of the demo can be [downloaded](http://www.symfony-project.com/downloads/demo/cart/project.tgz) and is available [online](http://www.symfony-project.com/demo/cart.html). You will notice a few minor differences with the code described in this tutorial (including a trash box), but the core behaviors are the same.
+该演示的全部代码可以从这里[下载](http://www.symfony-project.com/downloads/demo/cart/project.tgz) 并且可以[在线](http://www.symfony-project.com/demo/cart.html)访问。 你将注意到些许的不同（增加了一个回收箱） 但和谐内容没有变化。
 
-Until the full documentation of the javascript helpers is released, you can find more information about them in the [script.aculo.us documentation](http://wiki.script.aculo.us/scriptaculous/list?category=Controls).
+javascript 助手的文档完善之前，你可以从 [script.aculo.us documentation](http://wiki.script.aculo.us/scriptaculous/list?category=Controls)获得更多信息。
