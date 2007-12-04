@@ -1,15 +1,15 @@
-﻿How to upload a file
+如何上传文件
 ====================
 
-Overview
---------
+提要
+----
 
-Backends and collaborative applications often require users to upload media or data files. With a few lines of code, symfony handles all that needs to be taken care of - file renaming, move to upload directory, etc. And the users of the admin generator also have access to a new helper that reduces the implementation to a simple configuration.
+后台和协作的应用经常要求用户上传媒体和数据文件。 只需要几行代码，symfony 就可以将这一切掌控：文件重命名，移动到上传目录等等。 使用管理生成（admin generator）的用户更可运用一个新的助手（helper）将其实施减少到一个简单的配置。
 
-Regular file upload
--------------------
+普通文件上传
+----------
 
-Uploading a file requires a form in a template, and an action to handle it. For the template, use the `input_file_tag()` helper in a form declared as `multipart`:
+上传文件需要一个含有表单的模板（template）,一个动作（action）来完成相应的处理工作。 就模板而言，在其中使用 `input_file_tag()` 助手，并将 `multipart` 选项打开：
 
     [php]
     <?php echo form_tag('media/upload', 'multipart=true') ?>
@@ -17,7 +17,7 @@ Uploading a file requires a form in a template, and an action to handle it. For 
       <?php echo submit_tag('Send') ?>
     </form>
     
-It generates the following HTML code:
+如下的 HTML 代码将被生成：
 
     [php]
     <form method="post" enctype="multipart/form-data" action="media/upload">
@@ -25,7 +25,7 @@ It generates the following HTML code:
       <input type="submit" name="commit" value="Send" />
     </form>
     
-The action (`media/upload` in this example) moves the file from the request to the upload directory:
+行为（本例中的 `media/upload` ）将文件从请求之处移动到上传目录：
 
     [php]
     public function executeUpload()
@@ -37,7 +37,7 @@ The action (`media/upload` in this example) moves the file from the request to t
       $this->redirect('media/show?filename='.$fileName);    
     }
 
-The `sf_upload_dir` parameter holds the absolute path, in your server, where the file is to be uploaded. For a project called `myproject`, it is usually `/home/production/myproject/web/upload/`. You can modify it easily in the `config/config.php`:
+`sf_upload_dir` 参数指代你的服务器上文件将被上到的绝对路径。 对于一个名为 `myproject` 的项目，通常是 `/home/production/myproject/web/upload/`。 你可以通过修改  `config/config.php` 轻易地更改之。
 
     [php]
     sfConfig::add(array(
@@ -45,18 +45,18 @@ The `sf_upload_dir` parameter holds the absolute path, in your server, where the
       'sf_upload_dir'       => sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_web_dir_name').DIRECTORY_SEPARATOR.$sf_upload_dir_name,      
     ));    
 
->**Note**: Before moving the file from the request to the upload directory, you should sanitize the filename to replace special characters and avoid file system problems. In addition, you should escape the `$fileName` before passing it as a request parameter.
+>**Note**：在将文件从请求之出移动到上传目录之前，你应该整理文件名称，取出其中的特殊字符以避免文件系统方面的麻烦。 另外，你在将 `$fileName` 作为请求参数传递之前，应该先进行特殊字符处理。
 
-To display the uploaded file, use the `sf_upload_dir_name` parameter. For example, if the uploaded media is an image, the `media/show` template will display it with:
+显示上传的文件要使用 `sf_upload_dir_name` 参数。 例如，如果上传的是一个媒体文件， `media/show` 模板将这样显示之：
 
     [php]
     ...
     <?php echo image_tag('/'.sfConfig::get('sf_upload_dir_name').'/'.$sf_params->get('filename')) ?>
 
-Validation
-----------
+验证
+----
 
-Like regular form inputs, file upload tags can be validated by a [symfony validator](http://www.symfony-project.com/book/trunk/10-Forms#Validators), the `sfFileValidator`. Just remember to put a custom `file: true` parameter in the validator declaration under the `names` key. For instance, the `validate/upload.yml` for the previous form should be written as follows:
+与普通表单一样，文件上传标记（tag）可以被 [symfony 验证器（validator）](http://www.symfony-project.com/book/trunk/10-Forms#Validators) 验证：`sfFileValidator`。只需要在验证器声明中在 `names`  键之下添加自定义的 `file: true` 。例如：为前面的表单进行验证的 `validate/upload.yml` 应被设置为：
 
     methods:
       post:               [file]
@@ -80,23 +80,23 @@ Like regular form inputs, file upload tags can be validated by a [symfony valida
         max_size:         512000
         max_size_error:   Max size is 512Kb
 
->**Note**: Due to inconsistencies between Internet Explorer and other browsers, you have to use the IE-specific mime types as well as the regular ones.
+>**Note**：鉴于 Internet Explorer 和其他浏览器的不一致性，你必须像其他情形一样使用IE指定的（IE-specific） mime 类型。
 
-The `sfFileValidator` can validate the type of the uploaded file (you can specify an array of mime types) its size (you can specify a minimum and a maximum size).
+`sfFileValidator` 可以验证上传文件的类型（你可以制定一个 mime 类型数组）以及大小（你可以制定最小和最大值）。
 
-Thumbnails
-----------
+缩略图（Thumbnails）
+------------------
 
-If you upload images, you might need to create thumbnails of each uploaded file. In this case, the [`sfThumbnail` plugin](http://www.symfony-project.com/trac/wiki/sfThumbnailPlugin) might prove useful.
+如果你是上传文件，你可能需要为每个上传的文件建立缩略图。[`sfThumbnail` plugin](http://www.symfony-project.com/trac/wiki/sfThumbnailPlugin)可能对此情形很有用。
 
-First, install the plugin using the symfony command line:
+首先，安装使用 symfony 命令行安装插件（plugin）：
 
     $ symfony plugin-install http://plugins.symfony-project.com/sfThumbnailPlugin
     $ symfony cc
     
->**Note**: If the GD library is not activated, you might have to uncomment the related line in your `php.ini` and restart your web server to enable PHP image handling functions.
+>**Note**：如果 GD 库没有激活，你可能必须在 `php.ini` 文件中清除掉相关行的注视并重启你的网站服务以开启 PHP 图片处理函数。
 
-Once the plugin is installed, you can use it through the `sfThumbnail` object. For instance, to save a thumbnail of maximum size 150x150px at the same time as the uploaded image in the above example, replace the `media/upload` action by:
+插件一经安装，你便可以通过 `sfThumbnail` 对象使用它。 例如：在上传前面例子中的图片的同时存储一个最大大小为 150x150px 的缩略图，以下面的代码取代 `media/upload` 动作中的代码：
 
     [php]
     public function executeUpload()
@@ -112,14 +112,14 @@ Once the plugin is installed, you can use it through the `sfThumbnail` object. F
       $this->redirect('media/show?filename='.$fileName);    
     }
 
-Don't forget to create the `uploads/thumbnail/` directory before calling the action.
+在调用该动作之前，不要忘记建立 `uploads/thumbnail/` 目录。
 
-File upload with the admin generator
-------------------------------------
+使用 admin generator 上传文件
+---------------------------
 
-If your data model contains a field for a media, and if your administration is built using the [admin generator](http://www.symfony-project.com/book/trunk/14-Generators#Administration), you can use the long named `object_admin_input_upload_tag()` helper. It does everything for you with just a simple configuration.
+如果你的数据模型包含为媒体（media）准备的字段（field）,并且是通过the [admin generator](http://www.symfony-project.com/book/trunk/14-Generators#Administration)建立的管理系统，你可以使用 `object_admin_input_upload_tag()` 助手。一个简单的配置一切都为你安排好了。
 
-For instance, if you have a `User` table with a `photo` column, the `generator.yml` for the `edit` view can be configured as follows:
+例如， 如果你的 `User` 表含有 `photo` 列， `generator.yml` 的 `edit` 视图可以配置为：
 
     edit:
       title:          User profile
@@ -132,8 +132,8 @@ For instance, if you have a `User` table with a `photo` column, the `generator.y
           params:     include_link=pictures/users include_remove=true
       display:        [name, email, photo]
 
-The `upload_dir` key sets the upload directory (under the `uploads/` directory).
+`upload_dir` 键设置上传文件夹 （在 `uploads/` 目录中）。
 
-If you include an `include_link` param, a link will be added to the uploaded media (that is, if a media is uploaded). The text of the link is '[show file]' by default - unless you specify an `include_text` param.
+如果你设置了一个 `include_link` 参数，一个链接将被加到上传的媒体（如果媒体已被上传）。在没有修改 `include_text` 参数之前，链接的文字默认是 '[show file（显示文件）]' 。
 
-If you include an `include_remove` param, the helper will display a link to allow easy removal of the media when clicked.
+如果你设置了一个 `include_remove` 参数，助手将显示一个允许你轻松点击就删除媒体文件的连接。
